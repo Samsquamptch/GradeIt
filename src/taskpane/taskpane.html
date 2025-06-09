@@ -20,19 +20,21 @@
     <link href="taskpane.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body class="ms-font-m ms-welcome ms-Fabric">
+<body class="grade-it-main">
    <main>
     <section>
-        <h2>Set Ranges</h2>
+        <h3>Set Ranges</h3>
         <p>Enter the ranges for the marks and where you want to output the grades. Please ensure both ranges are the same length.</p>
-        <label for="mark-range">Enter Marks Range:</label>
-        <input type="text" id="mark-range" name="mark" />
-        <br>
-        <label for="grade-range">Enter Grade Range:</label>
-        <input type="text" id="grade-range" name="grade" />
+        <div class="input-boxes">
+            <label for="mark-range">Enter Marks Range:</label>
+            <input type="text" id="mark-range" name="mark"/>
+            <br>
+            <label for="grade-range">Enter Grade Range:</label>
+            <input type="text" id="grade-range" name="grade"/>
+        </div>
     </section>
     <section>
-        <h2>Set Grade Boundaries</h2>
+        <h3>Set Grade Boundaries</h3>
         <p>Enter the minimum mark required for each grade, ensuring the marks and grades are in descending order (highest grade first and lowest grade last).
             The lowest grade should always have the minimum mark set to 0.
         </p>

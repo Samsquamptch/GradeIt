@@ -20,10 +20,10 @@ export async function addBoundary() {
   div.className = 'row';
 
   div.innerHTML = `
-    <label for="set-mark">Minimum Mark:</label>
-    <input type="text" name="set-mark" />
+    <label for="set-mark">Mark:</label>
+    <input type="text" name="set-mark" autocomplete="off"/>
     <label for="set-grade">Grade:</label>
-    <input type="text"  name="set-grade" />
+    <input type="text"  name="set-grade" autocomplete="off"/>
     <input type="button" value="Remove" onclick="removeBoundary(this)" />`;
 
   document.getElementById('boundaries').appendChild(div);
