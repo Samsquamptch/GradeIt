@@ -9,7 +9,6 @@ Office.onReady((info) => {
   if (info.host === Office.HostType.Excel) {
     document.getElementById("add").addEventListener("click",addBoundary)
     document.getElementById("submit").addEventListener("click",setGrades)
-    document.getElementById("remove").addEventListener("click",removeBoundary)
   }
 });
 
@@ -20,9 +19,9 @@ export async function addBoundary() {
 
   div.innerHTML = `
     <label for="set-mark">Minimum Mark:</label>
-    <input type="text" id="set-mark" name="mark-boundary" />
+    <input type="text" name="set-mark" />
     <label for="set-grade">Grade:</label>
-    <input type="text" id="set-grade" name="grade-boundary" />
+    <input type="text"  name="set-grade" />
     <input type="button" value="Remove" onclick="removeBoundary(this)" />`;
 
   document.getElementById('boundaries').appendChild(div);
@@ -32,8 +31,47 @@ export async function removeBoundary(input) {
   document.getElementById('boundaries').removeChild(input.parentNode);
 }
 
+function collectBoundaries() {
+  const boundaries = [];
+
+  document.querySelectorAll('#boundaries .row').forEach(row => {
+    const mark = row.querySelector('[name="set-mark"]').value;
+    const grade = row.querySelector('[name="set-grade"]').value;
+
+    boundaries.push({ mark, grade });
+  });
+
+  return boundaries;
+}
+
+function collectRanges() {
+  const markRange = document.querySelector('[id="mark-boundary"]').value;
+  const gradeRange = document.querySelector('[id="grade-boundary"]').value;
+
+  return {markRange, gradeRange}
+}
+
 export async function setGrades() {
-  console.log("hello, world")
+  const boundaries = collectBoundaries()
+  for (let i = 0; i < boundaries.length; i++) {
+    console.log("Mark: " + boundaries[i].mark + " |  Grade: " + boundaries[i].grade)
+  }
+  const ranges = collectRanges()
+  console.log("Mark Range: " + ranges.markRange + " | Grade Range: " + ranges.gradeRange)
+  Excel.run(async (context) => {
+    const sheet = context.workbook.worksheets.getActiveWorksheet()
+
+    const markRange = sheet.getRange(ranges.markRange)
+    markRange.load("values");
+    const gradeRange = sheet.getRange(ranges.gradeRange)
+
+    await context.sync()
+
+    const markValues = markRange.values.map(row => row[0])
+
+    console.log(markValues)
+  })
+  
 }
 
 window.removeBoundary = removeBoundary;
