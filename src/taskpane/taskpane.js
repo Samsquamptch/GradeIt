@@ -63,13 +63,28 @@ export async function setGrades() {
 
     const markRange = sheet.getRange(ranges.markRange)
     markRange.load("values");
-    const gradeRange = sheet.getRange(ranges.gradeRange)
-
     await context.sync()
 
-    const markValues = markRange.values.map(row => row[0])
+    const studentMarks = markRange.values.map(row => row[0])
 
-    console.log(markValues)
+    const grades = studentMarks.map(mark => {
+      if (mark === "" || isNaN(mark)) {return "";}
+
+      const numMark = Number(mark);
+
+      for (let i = 0; i < boundaries.length; i++) {
+        if (numMark >= boundaries[i].mark) {
+          return boundaries[i].grade;
+        }
+      }
+        })
+  
+
+    const gradeRange = sheet.getRange(ranges.gradeRange)
+    const grades2D = grades.map(grade => [grade]);
+    gradeRange.numberFormat = [['@']];
+    gradeRange.values = grades2D
+    await context.sync()
   })
   
 }
