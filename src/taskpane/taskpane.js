@@ -7,30 +7,33 @@
 
 Office.onReady((info) => {
   if (info.host === Office.HostType.Excel) {
-    document.getElementById("sideload-msg").style.display = "none";
-    document.getElementById("app-body").style.display = "flex";
-    document.getElementById("run").onclick = run;
+    document.getElementById("add").addEventListener("click",addBoundary)
+    document.getElementById("submit").addEventListener("click",setGrades)
+    document.getElementById("remove").addEventListener("click",removeBoundary)
   }
 });
 
-export async function run() {
-  try {
-    await Excel.run(async (context) => {
-      /**
-       * Insert your Excel code here
-       */
-      const range = context.workbook.getSelectedRange();
+export async function addBoundary() {
+  const div = document.createElement('div');
 
-      // Read the range address
-      range.load("address");
+  div.className = 'row';
 
-      // Update the fill color
-      range.format.fill.color = "yellow";
+  div.innerHTML = `
+    <label for="set-mark">Minimum Mark:</label>
+    <input type="text" id="set-mark" name="mark-boundary" />
+    <label for="set-grade">Grade:</label>
+    <input type="text" id="set-grade" name="grade-boundary" />
+    <input type="button" value="Remove" onclick="removeBoundary(this)" />`;
 
-      await context.sync();
-      console.log(`The range address was ${range.address}.`);
-    });
-  } catch (error) {
-    console.error(error);
-  }
+  document.getElementById('boundaries').appendChild(div);
 }
+
+export async function removeBoundary(input) {
+  document.getElementById('boundaries').removeChild(input.parentNode);
+}
+
+export async function setGrades() {
+  console.log("hello, world")
+}
+
+window.removeBoundary = removeBoundary;

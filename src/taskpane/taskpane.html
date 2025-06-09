@@ -24,14 +24,23 @@
    <main>
     <section>
         <h2>Set Ranges</h2>
-        <label for="mark-input">Enter Marks Range:</label>
-        <input type="text" id="mark-input" name="mark" />
+        <p>Enter the ranges for the marks and where you want to output the grades. Please ensure both ranges are the same length.</p>
+        <label for="mark-boundary">Enter Marks Range:</label>
+        <input type="text" id="mark-boundary" name="mark" />
         <br>
-        <label for="grade-input">Enter Grade Range:</label>
-        <input type="text" id="grade-input" name="grade" />
+        <label for="grade-boundary">Enter Grade Range:</label>
+        <input type="text" id="grade-boundary" name="grade" />
     </section>
     <section>
-        
+        <h2>Set Grade Boundaries</h2>
+        <p>Please enter the minimum mark required for each grade, ensuring the marks and grades are in descending order (highest grade first and lowest grade last).</p>
+        <div id="boundaries"></div>
+        <button id="add">Add New Boundary</button>
+    </section>
+    <section>
+        <h2>Submit</h2>
+        <p>When you are happy with the above settings, please press the submit button.</p>
+        <button id="submit">Submit</button>
     </section>
    </main>
 </body>
