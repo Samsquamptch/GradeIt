@@ -2,7 +2,7 @@
 <!-- This file shows how to design a first-run page that provides a welcome screen to the user about the features of the add-in. -->
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8" />
@@ -25,11 +25,11 @@
     <section>
         <h2>Set Ranges</h2>
         <p>Enter the ranges for the marks and where you want to output the grades. Please ensure both ranges are the same length.</p>
-        <label for="mark-boundary">Enter Marks Range:</label>
-        <input type="text" id="mark-boundary" name="mark" />
+        <label for="mark-range">Enter Marks Range:</label>
+        <input type="text" id="mark-range" name="mark" />
         <br>
-        <label for="grade-boundary">Enter Grade Range:</label>
-        <input type="text" id="grade-boundary" name="grade" />
+        <label for="grade-range">Enter Grade Range:</label>
+        <input type="text" id="grade-range" name="grade" />
     </section>
     <section>
         <h2>Set Grade Boundaries</h2>
@@ -42,6 +42,8 @@
     <section>
         <p>When you are happy with the above settings, please press the submit button.</p>
         <button id="submit">Submit</button>
+        <p id="message"></p>
+        <p id="error"></p>
     </section>
    </main>
 </body>

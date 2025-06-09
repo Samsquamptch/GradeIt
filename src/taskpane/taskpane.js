@@ -3,6 +3,8 @@
  * See LICENSE in the project root for license information.
  */
 
+import { all } from "core-js/features/promise";
+
 /* global console, document, Excel, Office */
 
 Office.onReady((info) => {
@@ -41,33 +43,65 @@ function collectBoundaries() {
     boundaries.push({ mark, grade });
   });
 
+  for (let i = 0; i < boundaries.length; i++) {
+    if (isNaN(boundaries[i].mark)) {
+      throw new Error("")
+    }
+  }
+
   return boundaries;
 }
 
 function collectRanges() {
-  const markRange = document.querySelector('[id="mark-boundary"]').value;
-  const gradeRange = document.querySelector('[id="grade-boundary"]').value;
+  const markRange = document.querySelector('[id="mark-range"]').value;
+  const gradeRange = document.querySelector('[id="grade-range"]').value;
 
   return {markRange, gradeRange}
 }
 
-export async function setGrades() {
-  const boundaries = collectBoundaries()
-  for (let i = 0; i < boundaries.length; i++) {
-    console.log("Mark: " + boundaries[i].mark + " |  Grade: " + boundaries[i].grade)
+function updateMessage(message) {
+  const text = message.slice(0, 5);
+  if (text === "ERROR") {
+    document.getElementById("message").innerHTML = ""
+    document.getElementById("error").innerHTML = message
   }
+  else {
+    document.getElementById("message").innerHTML = message
+    document.getElementById("error").innerHTML = ""
+  }
+}
+
+export async function setGrades() {
   const ranges = collectRanges()
-  console.log("Mark Range: " + ranges.markRange + " | Grade Range: " + ranges.gradeRange)
+  let boundaries
+  try {
+    boundaries = collectBoundaries()
+  } catch (error) {
+    updateMessage("ERROR: Please ensure all boundaries have numerical values")
+    return
+  }
+
   Excel.run(async (context) => {
     const sheet = context.workbook.worksheets.getActiveWorksheet()
 
-    const markRange = sheet.getRange(ranges.markRange)
+    let markRange, gradeRange
+
+    try {
+      markRange = sheet.getRange(ranges.markRange);
+      gradeRange = sheet.getRange(ranges.gradeRange);
+    } catch (error) {
+      updateMessage("ERROR: Please ensure ranges are only one column each (i.e. B2:B10 and C2:C10)")
+      return
+    }
+
     markRange.load("values");
     await context.sync()
 
     const studentMarks = markRange.values.map(row => row[0])
 
-    const grades = studentMarks.map(mark => {
+    let grades
+    try {
+      grades = studentMarks.map(mark => {
       if (mark === "" || isNaN(mark)) {return "";}
 
       const numMark = Number(mark);
@@ -78,15 +112,18 @@ export async function setGrades() {
         }
       }
         })
-  
-
-    const gradeRange = sheet.getRange(ranges.gradeRange)
+    } catch (error) {
+      updateMessage("ERROR: Mark and Grade ranges do not match in length!")
+      return
+    }
+    
     const grades2D = grades.map(grade => [grade]);
     gradeRange.numberFormat = [['@']];
     gradeRange.values = grades2D
     await context.sync()
   })
-  
+  updateMessage("Grades set successfully!")
 }
+
 
 window.removeBoundary = removeBoundary;
